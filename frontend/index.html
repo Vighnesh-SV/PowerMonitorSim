@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PowerMonitorSim — OS Battery & Activity Monitor</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-title">PowerMonitorSim</span>
+      <span class="brand-sub">Android OS Power &amp; Activity Simulator</span>
+    </div>
+    <div class="sim-controls">
+      <span id="sim-clock" class="clock">Day 1 · 08:00:00</span>
+      <button id="btn-play" class="btn btn-primary">Play</button>
+      <button id="btn-pause" class="btn">Pause</button>
+      <select id="sel-speed" class="select">
+        <option value="1">1x</option>
+        <option value="10" selected>10x</option>
+        <option value="60">60x</option>
+        <option value="300">300x</option>
+      </select>
+      <input id="inp-seed" type="number" class="input-seed" value="42" title="RNG Seed" />
+      <button id="btn-reset" class="btn">Reset</button>
+      <button id="btn-charger" class="btn">Plug Charger</button>
+      <button id="btn-theme" class="btn" title="Toggle theme">Theme</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="live">Live</button>
+    <button class="tab" data-tab="apps">Apps</button>
+    <button class="tab" data-tab="processes">Process Table</button>
+    <button class="tab" data-tab="history">History</button>
+    <button class="tab" data-tab="reports">Reports</button>
+    <button class="tab" data-tab="optimizer">Optimizer</button>
+    <button class="tab" data-tab="alerts">Alerts</button>
+    <button class="tab" data-tab="internals">OS Internals</button>
+  </nav>
+
+  <main class="container">
+    <section id="tab-live" class="tab-panel active">
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-label">Battery Level</div>
+          <div id="val-level" class="card-value">--%</div>
+          <div id="val-status" class="card-meta">--</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Current Draw</div>
+          <div id="val-current" class="card-value">-- mA</div>
+          <div id="val-eta" class="card-meta">ETA: --</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Voltage</div>
+          <div id="val-voltage" class="card-value">-- mV</div>
+          <div id="val-cap" class="card-meta">-- / -- mAh</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Temperature</div>
+          <div id="val-temp" class="card-value">-- °C</div>
+          <div id="val-health" class="card-meta">Health: --%</div>
+        </div>
+      </div>
+
+      <div class="card chart-card">
+        <div class="card-label">Real-Time Battery Level (%) &amp; Current Draw (mA)</div>
+        <canvas id="liveChart" height="100"></canvas>
+      </div>
+      <div class="card chart-card">
+        <div class="card-label">Device Hardware State</div>
+        <div id="device-state-bar" class="device-bar">Screen: -- | Doze: -- | CPU: -- MHz | WiFi: -- | GPS: --</div>
+      </div>
+    </section>
+
+    <section id="tab-apps" class="tab-panel">
+      <div class="card">
+        <div class="card-label">Per-App Energy Attribution (mAh by Hardware Component)</div>
+        <canvas id="appsChart" height="100"></canvas>
+      </div>
+      <div class="card chart-card">
+        <div class="card-label">Application Power Breakdown (FG vs BG)</div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>App</th><th>Total (mAh)</th><th>Share</th>
+                <th>Foreground (mAh)</th><th>Background (mAh)</th>
+                <th>CPU</th><th>Screen</th><th>Network</th><th>GPS</th><th>Wakelock</th>
+              </tr>
+            </thead>
+            <tbody id="apps-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="tab-processes" class="tab-panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-label">OS Process Table (Task Manager)</div>
+          <button id="btn-screen" class="btn">Toggle Screen</button>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>PID</th><th>App</th><th>State</th><th>Standby Bucket</th>
+                <th>CPU Time (s)</th><th>Wakelock</th><th>Power (mA)</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="process-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="tab-history" class="tab-panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-label">Historical Battery Samples (SQLite)</div>
+          <div class="sim-controls">
+            <select id="sel-session" class="select"></select>
+            <button id="btn-load-history" class="btn">Load</button>
+          </div>
+        </div>
+        <canvas id="historyChart" height="90"></canvas>
+      </div>
+      <div class="card chart-card">
+        <div class="card-label">Process State Transition Events</div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Sim Time (s)</th><th>Package</th><th>From</th><th>To</th></tr></thead>
+            <tbody id="events-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+    <section id="tab-reports" class="tab-panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-label">Consumption Summary Report</div>
+          <div class="sim-controls">
+            <a href="/api/reports/export.csv" class="btn" download="power_report.csv">Export CSV</a>
+            <button onclick="window.print()" class="btn btn-primary">Print / PDF</button>
+          </div>
+        </div>
+        <div id="report-summary" class="grid-4" style="margin-top:12px;"></div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div class="card-label">Hourly Drain Pattern (% lost per hour)</div>
+        <div id="report-heatmap" class="heatmap"></div>
+      </div>
+      <div class="card" style="margin-top:14px;">
+        <div class="card-label">Per-App Breakdown</div>
+        <div class="table-wrap"><table class="data-table"><thead><tr><th>App</th><th>Total mAh</th><th>Share</th><th>Foreground</th><th>Background</th><th>CPU</th><th>Screen</th><th>Network</th><th>GPS</th><th>Wakelock</th></tr></thead>
+        <tbody id="report-apps"></tbody></table></div>
+      </div>
+    </section>
+    <section id="tab-optimizer" class="tab-panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-label">What-If Battery Optimizer (16-Hour Seeded Comparison)</div>
+          <button id="btn-run-opt" class="btn btn-primary">Run Simulation</button>
+        </div>
+        <div class="sim-controls" style="margin-top:10px;">
+          <label><input type="checkbox" id="opt-saver" /> Battery Saver</label>
+          <label><input type="checkbox" id="opt-doze" checked /> Aggressive Doze</label>
+          <label><input type="checkbox" id="opt-rogue" checked /> Restrict RogueApp</label>
+          <label>Max Brightness: <input type="number" id="opt-bright" value="0.7" step="0.1" min="0.2" max="1.0" class="input-seed" /></label>
+          <label>Max CPU MHz: <select id="opt-cpu" class="select"><option value="2400">2400</option><option value="1800" selected>1800</option><option value="1200">1200</option></select></label>
+        </div>
+        <div id="opt-result" class="grid-4" style="margin-top:14px;"></div>
+        <canvas id="optChart" height="90"></canvas>
+      </div>
+    </section>
+    <section id="tab-alerts" class="tab-panel">
+      <div class="card">
+        <div class="card-header-row">
+          <div class="card-label">Anomaly &amp; Rogue App Alerts</div>
+          <button id="btn-refresh-alerts" class="btn">Refresh</button>
+        </div>
+        <div id="alerts-list" style="margin-top:10px;"></div>
+      </div>
+    </section>
+    <section id="tab-internals" class="tab-panel">
+      <div class="grid-4" id="internals-live"></div>
+      <div class="card chart-card">
+        <div class="card-label">Operating System Concepts Modeled</div>
+        <ul style="line-height:1.8; padding-left:18px;">
+          <li><strong>Process States &amp; Lifecycle:</strong> Apps transition between <code>FOREGROUND</code>, <code>VISIBLE</code>, <code>SERVICE</code>, <code>BACKGROUND</code>, <code>CACHED</code>, and <code>STOPPED</code>.</li>
+          <li><strong>Scheduling &amp; CPU Accounting:</strong> Priority-weighted round-robin scheduler allocates CPU slices per tick, tracking <code>cpu_time_ms</code> and context switches.</li>
+          <li><strong>DVFS (Dynamic Voltage &amp; Frequency Scaling):</strong> CPU scales across 600 / 1200 / 1800 / 2400 MHz based on aggregate runnable demand.</li>
+          <li><strong>Doze Mode &amp; App Standby Buckets:</strong> Screen-off idle triggers Doze; <code>RARE</code> and <code>RESTRICTED</code> buckets throttle background CPU/network.</li>
+          <li><strong>Wakelocks:</strong> Background services holding wakelocks prevent full sleep and incur explicit mA overhead.</li>
+          <li><strong>Power Attribution Model:</strong> Hardware component mA (<code>power_profile.xml</code>) is attributed proportionally to runnable processes each tick.</li>
+          <li><strong>Sampling vs Event-Based Logging:</strong> Battery &amp; energy samples are logged periodically to SQLite; process state transitions are logged as discrete events.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

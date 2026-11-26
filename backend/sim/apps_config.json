@@ -1,0 +1,192 @@
+[
+  {
+    "package": "com.google.android.youtube",
+    "name": "YouTube",
+    "category": "Video",
+    "fg_demand": {
+      "cpu": 0.55,
+      "network": 0.8,
+      "gps": 0.0,
+      "wakelock": true,
+      "screen_brightness_bias": 0.8
+    },
+    "bg_demand": {
+      "cpu": 0.02,
+      "network": 0.05,
+      "gps": 0.0,
+      "wakelock": false
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.instagram.android",
+    "name": "Instagram",
+    "category": "Social",
+    "fg_demand": {
+      "cpu": 0.45,
+      "network": 0.65,
+      "gps": 0.0,
+      "wakelock": false,
+      "screen_brightness_bias": 0.7
+    },
+    "bg_demand": {
+      "cpu": 0.03,
+      "network": 0.08,
+      "gps": 0.0,
+      "wakelock": false
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.whatsapp",
+    "name": "WhatsApp",
+    "category": "Messaging",
+    "fg_demand": {
+      "cpu": 0.2,
+      "network": 0.3,
+      "gps": 0.0,
+      "wakelock": false,
+      "screen_brightness_bias": 0.6
+    },
+    "bg_demand": {
+      "cpu": 0.04,
+      "network": 0.15,
+      "gps": 0.0,
+      "wakelock": true
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.google.android.apps.maps",
+    "name": "Google Maps",
+    "category": "Navigation",
+    "fg_demand": {
+      "cpu": 0.5,
+      "network": 0.4,
+      "gps": 1.0,
+      "wakelock": true,
+      "screen_brightness_bias": 0.9
+    },
+    "bg_demand": {
+      "cpu": 0.08,
+      "network": 0.1,
+      "gps": 0.4,
+      "wakelock": true
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.epic.racers3d",
+    "name": "3D Racers",
+    "category": "Game",
+    "fg_demand": {
+      "cpu": 0.95,
+      "network": 0.2,
+      "gps": 0.0,
+      "wakelock": true,
+      "screen_brightness_bias": 0.95
+    },
+    "bg_demand": {
+      "cpu": 0.01,
+      "network": 0.0,
+      "gps": 0.0,
+      "wakelock": false
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.spotify.music",
+    "name": "Spotify",
+    "category": "Audio",
+    "fg_demand": {
+      "cpu": 0.2,
+      "network": 0.35,
+      "gps": 0.0,
+      "wakelock": false,
+      "screen_brightness_bias": 0.5
+    },
+    "bg_demand": {
+      "cpu": 0.12,
+      "network": 0.25,
+      "gps": 0.0,
+      "wakelock": true
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.android.chrome",
+    "name": "Chrome",
+    "category": "Browser",
+    "fg_demand": {
+      "cpu": 0.45,
+      "network": 0.55,
+      "gps": 0.0,
+      "wakelock": false,
+      "screen_brightness_bias": 0.7
+    },
+    "bg_demand": {
+      "cpu": 0.02,
+      "network": 0.02,
+      "gps": 0.0,
+      "wakelock": false
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.google.android.gm",
+    "name": "Gmail",
+    "category": "Productivity",
+    "fg_demand": {
+      "cpu": 0.2,
+      "network": 0.3,
+      "gps": 0.0,
+      "wakelock": false,
+      "screen_brightness_bias": 0.6
+    },
+    "bg_demand": {
+      "cpu": 0.03,
+      "network": 0.1,
+      "gps": 0.0,
+      "wakelock": false
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.android.camera",
+    "name": "Camera",
+    "category": "Media",
+    "fg_demand": {
+      "cpu": 0.8,
+      "network": 0.0,
+      "gps": 0.3,
+      "wakelock": true,
+      "screen_brightness_bias": 1.0
+    },
+    "bg_demand": {
+      "cpu": 0.0,
+      "network": 0.0,
+      "gps": 0.0,
+      "wakelock": false
+    },
+    "is_rogue": false
+  },
+  {
+    "package": "com.shady.roguecleaner",
+    "name": "RogueApp",
+    "category": "Utility",
+    "fg_demand": {
+      "cpu": 0.15,
+      "network": 0.2,
+      "gps": 0.0,
+      "wakelock": false,
+      "screen_brightness_bias": 0.5
+    },
+    "bg_demand": {
+      "cpu": 0.18,
+      "network": 0.35,
+      "gps": 0.15,
+      "wakelock": true
+    },
+    "is_rogue": true
+  }
+]
